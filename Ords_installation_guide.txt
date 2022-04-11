@@ -1,0 +1,61 @@
+DB server
+1. create tablespace apex
+2. $ cd /home/oracle/apex
+3. SQL> CONN sys@pdb1 AS SYSDBA
+4. SQL>@apexins.sql APEX APEX TEMP /i/
+5. SQL>@apxchpwd.sql 
+6. Create the APEX_LISTENER and APEX_REST_PUBLIC_USER users by running the "apex_rest_config.sql" script.
+   SQL> @apex_rest_config.sql
+	
+	
+	
+App server:
+
+APP server ( tomcat server)
+
+1. $ mkdir -p /usr/local/ords/conf
+2. java -jar ords.war configdir /usr/local/ords/conf
+3. [root@ords ords]# java -jar ords.war
+	Enter the name of the database server [localhost]: localhost
+	Enter the database listen port [1521]:
+	Enter 1 to specify the database service name, or 2 to specify the database SID [1]:
+	Enter the database service name:TESTUAT
+	Enter the database password for ORDS_PUBLIC_USER: 
+	Confirm password:
+	Enter the administrator username:sys
+	Enter the database password for SYS AS SYSDBA:manager
+	Confirm password:
+	Enter 1 if you want to use PL/SQL Gateway or 2 to skip this step.
+	If using Oracle Application Express or migrating from mod_plsql then you must enter 1 [1]:
+	Enter the database password for APEX_PUBLIC_USER: 
+	Confirm password:
+	Enter 1 to specify passwords for Application Express RESTful Services database users (APEX_LISTENER, APEX_REST_PUBLIC_USER) or 2 to skip this step [1]:
+	Enter the database password for APEX_LISTENER: 
+	Confirm password:
+	Enter the database password for APEX_REST_PUBLIC_USER:
+	Confirm password:
+	Sep 11, 2019 11:24:23 AM
+	INFO: reloaded pools: []
+		Installing Oracle REST Data Services version 
+		... Log file written to /root/ords_install_core_2019-09-11_112423_00966.log
+		... Verified database prerequisites
+		... Created Oracle REST Data Services proxy user
+		... Created Oracle REST Data Services schema
+		... Granted privileges to Oracle REST Data Services
+		... Created Oracle REST Data Services database objects
+		... Log file written to /root/ords_install_datamodel_2019-09-11_112443_00053.log
+		... Log file written to /root/ords_install_apex_2019-09-11_112445_00170.log
+		Completed installation for Oracle REST Data Services. Elapsed time: 00:00:23.906
+	Enter 1 if you wish to start in standalone mode or 2 to exit [1]:2
+
+4. Copy the APEX images to the Tomcat "webapps" directory.
+	$ mkdir /usr/local/tomcat/webapps/i/
+	$ cp -R /usr/local/ords/apex/images/* /usr/local/tomcat/webapps/i/
+5. Validate 
+	java -jar ords.war validate
+
+	$ cp ords.war /usr/local/tomcat/webapps/
+6. Starting/Stopping ORDS Under Tomcat
+
+$ $CATALINA_HOME/bin/startup.sh
+$ $CATALINA_HOME/bin/shutdown.sh 
